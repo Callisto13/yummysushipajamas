@@ -1,0 +1,16 @@
+syntax = "proto3";
+package ysp;
+
+service Basic {
+  rpc Sum(Req) returns (Resp) {}
+  rpc Prime(Req) returns (stream Resp) {}
+}
+
+message Req {
+  int32 N1 = 1;
+  int32 N2 = 2;
+}
+
+message Resp {
+  int32 Result = 1;
+}
