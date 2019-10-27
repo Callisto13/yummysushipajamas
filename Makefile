@@ -9,10 +9,11 @@ proto:
 	@protoc -I $(PB_DIR)/ $(PB_DIR)/ysp.proto --go_out=plugins=grpc:pb
 
 unit:
+	@ginkgo -mod vendor -r client/
 	@ginkgo -mod vendor -r server/
 
 mock:
-	@GOPRIVATE=$(REPO) GO111MODULE=on mockgen $(REPO)/$(PB_DIR) Basic_PrimeServer > $(PB_DIR)/mocks/ysp_mock.go
+	@GOPRIVATE=$(REPO) GO111MODULE=on mockgen $(REPO)/$(PB_DIR) BasicClient,Basic_PrimeServer,Basic_PrimeClient > $(PB_DIR)/mocks/ysp_mock.go
 
 help:
 	@echo "Usage:"
