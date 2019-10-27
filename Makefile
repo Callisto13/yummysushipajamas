@@ -22,9 +22,9 @@ proto:
 
 test: unit int
 
-slow-test: int
-	@docker run -it --rm -v $(PWD):$(PWD) -w $(PWD) callisto13/go-ginkgo ginkgo -mod vendor -p -r client/
-	@docker run -it --rm -v $(PWD):$(PWD) -w $(PWD) callisto13/go-ginkgo ginkgo -mod vendor -p -r server/
+slow-test:
+	@echo "running all tests in docker container"
+	@docker run -it --rm -v $(PWD):$(PWD) -w $(PWD) callisto13/go-ginkgo ginkgo -mod vendor -p -r
 
 unit:
 	@ginkgo -mod vendor -r client/

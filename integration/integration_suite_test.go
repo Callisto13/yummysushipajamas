@@ -12,14 +12,14 @@ import (
 )
 
 var (
-	cliBin    string
-	serverBin string
+	cliBin     string
+	serverBin  string
+	serverPort string
+	serverCmd  *exec.Cmd
 )
 
 func TestIntegration(t *testing.T) {
 	RegisterFailHandler(Fail)
-
-	var serverCmd *exec.Cmd
 
 	BeforeSuite(func() {
 		var err error
@@ -29,7 +29,8 @@ func TestIntegration(t *testing.T) {
 		serverBin, err = gexec.Build("github.com/Callisto13/yummysushipajamas/server/cmd", "-mod=vendor")
 		Expect(err).NotTo(HaveOccurred())
 
-		serverCmd = exec.Command(serverBin, "-port", fmt.Sprintf("1430%d", config.GinkgoConfig.ParallelNode))
+		serverPort = fmt.Sprintf("1430%d", config.GinkgoConfig.ParallelNode)
+		serverCmd = exec.Command(serverBin, "-port", serverPort)
 		Expect(serverCmd.Start()).To(Succeed())
 	})
 

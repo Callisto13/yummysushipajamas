@@ -9,14 +9,25 @@ import (
 	"github.com/golang/mock/gomock"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/sirupsen/logrus"
+	"github.com/sirupsen/logrus/hooks/test"
 	"golang.org/x/net/context"
 )
 
 var _ = Describe("Server", func() {
-	var s server.Server
+	var (
+		s       server.Server
+		logHook *test.Hook
+	)
 
 	BeforeEach(func() {
-		s = server.Server{}
+		var logger *logrus.Logger
+		logger, logHook = test.NewNullLogger()
+		s = server.NewYSPServer(logger)
+	})
+
+	AfterEach(func() {
+		logHook.Reset()
 	})
 
 	Describe("Sum", func() {
@@ -24,6 +35,17 @@ var _ = Describe("Server", func() {
 			response, err := s.Sum(context.TODO(), &ysp.Req{N1: 1, N2: 2})
 			Expect(err).NotTo(HaveOccurred())
 			Expect(response.Result).To(Equal(int32(3)))
+		})
+
+		Context("Logging", func() {
+			It("logs sum events", func() {
+				_, err := s.Sum(context.TODO(), &ysp.Req{N1: 1, N2: 2})
+				Expect(err).NotTo(HaveOccurred())
+
+				Expect(len(logHook.Entries)).To(Equal(1))
+				Expect(logHook.LastEntry().Level).To(Equal(logrus.InfoLevel))
+				Expect(logHook.LastEntry().Message).To(Equal("sum"))
+			})
 		})
 	})
 
@@ -49,6 +71,17 @@ var _ = Describe("Server", func() {
 			It("returns the error", func() {
 				mockStream.EXPECT().Send(&ysp.Resp{Result: 5}).Return(errors.New("boo")).Times(1)
 				Expect(s.Prime(&ysp.Req{N1: 5, N2: 7}, mockStream)).NotTo(Succeed())
+			})
+		})
+
+		Context("Logging", func() {
+			It("logs prime events", func() {
+				mockStream.EXPECT().Send(gomock.Any()).Times(2)
+				Expect(s.Prime(&ysp.Req{N1: 5, N2: 8}, mockStream)).To(Succeed())
+
+				Expect(len(logHook.Entries)).To(Equal(1))
+				Expect(logHook.LastEntry().Level).To(Equal(logrus.InfoLevel))
+				Expect(logHook.LastEntry().Message).To(Equal("prime"))
 			})
 		})
 	})
