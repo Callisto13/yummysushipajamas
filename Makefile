@@ -22,6 +22,10 @@ proto:
 
 test: unit int
 
+slow-test: int
+	@docker run -it --rm -v $(PWD):$(PWD) -w $(PWD) callisto13/go-ginkgo ginkgo -mod vendor -p -r client/
+	@docker run -it --rm -v $(PWD):$(PWD) -w $(PWD) callisto13/go-ginkgo ginkgo -mod vendor -p -r server/
+
 unit:
 	@ginkgo -mod vendor -r client/
 	@ginkgo -mod vendor -r server/
@@ -51,16 +55,17 @@ clean:
 
 help:
 	@echo "Usage:"
-	@echo "  proto   ..................... regenerate grpc sources (will go to ./ysp/ysp.proto)"
-	@echo "  client  ..................... build the client bin (will go to ./bin/client)"
-	@echo "  server  ..................... build the server bin (will go to ./bin/server)"
-	@echo "  clean   ..................... delete bins"
-	@echo "  test    ..................... run all test suites"
-	@echo "  unit    ..................... run server and client unit tests"
-	@echo "  int     ..................... run integration tests"
-	@echo "  dep     ..................... update dependencies"
-	@echo "  mock    ..................... regenerate grpc testing mocks"
-	@echo "  docker  ..................... rebuild and push callisto13/ysp docker image"
-	@echo "  deploy  ..................... deploy server and service to minikube"
-	@echo "  destroy ..................... delete server and service"
-	@echo "  reload  ..................... proto server client docker destroy deploy (aka rebuild and redeploy the lot)"
+	@echo "  proto     ..................... regenerate grpc sources (will go to ./ysp/ysp.proto)"
+	@echo "  client    ..................... build the client bin (will go to ./bin/client)"
+	@echo "  server    ..................... build the server bin (will go to ./bin/server)"
+	@echo "  clean     ..................... delete bins"
+	@echo "  test      ..................... run all test suites"
+	@echo "  slow-test ..................... run all test suites in docker container"
+	@echo "  unit      ..................... run server and client unit tests"
+	@echo "  int       ..................... run integration tests"
+	@echo "  dep       ..................... update dependencies"
+	@echo "  mock      ..................... regenerate grpc testing mocks"
+	@echo "  docker    ..................... rebuild and push callisto13/ysp docker image"
+	@echo "  deploy    ..................... deploy server and service to minikube"
+	@echo "  destroy   ..................... delete server and service"
+	@echo "  reload    ..................... proto server client docker destroy deploy (aka rebuild and redeploy the lot)"
