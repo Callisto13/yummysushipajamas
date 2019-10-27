@@ -38,7 +38,7 @@ var _ = Describe("Client", func() {
 
 				resp, err := c.Sum(10, 32)
 				Expect(err).To(HaveOccurred())
-				Expect(resp).To(BeZero())
+				Expect(resp).To(BeNil())
 			})
 		})
 	})
@@ -79,6 +79,17 @@ var _ = Describe("Client", func() {
 				Expect(err).To(HaveOccurred())
 				Expect(resp).To(BeNil())
 			})
+		})
+	})
+
+	Describe("Call", func() {
+		It("delegates", func() {
+			mockYSP.EXPECT().Sum(gomock.Any(), gomock.Any()).Return(&ysp.Resp{Result: 3}, nil).Times(1)
+			mockYSP.EXPECT().Prime(gomock.Any(), gomock.Any()).Return(nil, nil).Times(0)
+
+			resp, err := c.Call("sum", 1, 2)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(resp).To(Equal(int32(3)))
 		})
 	})
 })
