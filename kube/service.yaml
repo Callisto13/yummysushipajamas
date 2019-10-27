@@ -1,0 +1,12 @@
+#@ load("@ytt:data", "data")
+apiVersion: v1
+kind: Service
+metadata:
+  name: ysp-service
+spec:
+  type: NodePort
+  selector:
+    app: hostname
+  ports:
+    - protocol: TCP
+      port: #@ data.values.port

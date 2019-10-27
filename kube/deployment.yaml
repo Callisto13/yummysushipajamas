@@ -1,0 +1,25 @@
+#@ load("@ytt:data", "data")
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ysp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hostname
+      version: v0.0.1
+  template:
+    metadata:
+      labels:
+        app: hostname
+        version: v0.0.1
+    spec:
+      containers:
+      - name: ysp
+        image: callisto13/ysp
+        ports:
+        - containerPort: #@ data.values.port
+        command:
+        - /usr/local/bin/ysp-server
+        - #@ "-port="+str(data.values.port)
