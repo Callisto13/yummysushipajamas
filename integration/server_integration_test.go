@@ -23,10 +23,8 @@ var _ = Describe("Server CLI", func() {
 		})
 
 		It("fulfils the current request before shutting down", func(done Done) {
-			cmdReturns := make(chan struct{})
-			killReturns := make(chan struct{})
-
 			var session *gexec.Session
+			cmdReturns := make(chan struct{})
 
 			go func() {
 				defer GinkgoRecover()
@@ -39,14 +37,9 @@ var _ = Describe("Server CLI", func() {
 				close(cmdReturns)
 			}()
 
-			go func() {
-				time.Sleep(time.Second)
-				serverSession.Interrupt()
+			time.Sleep(time.Second)
+			serverSession.Interrupt()
 
-				close(killReturns)
-			}()
-
-			Eventually(killReturns, "5s").Should(BeClosed())
 			Eventually(cmdReturns, "10s").Should(BeClosed())
 			Expect(string(session.Out.Contents())).To(ContainSubstring("99991"))
 

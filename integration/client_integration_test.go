@@ -83,7 +83,7 @@ var _ = Describe("YSP Client", func() {
 		It("prints all primes between two numbers", func() {
 			session, err := gexec.Start(cliCmd, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
-			Eventually(session.Out).Should(gbytes.Say("[3 5 7 11 13]"))
+			Eventually(session.Out).Should(gbytes.Say("3\n5\n7\n11\n13\n"))
 		})
 	})
 })

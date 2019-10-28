@@ -41,14 +41,11 @@ func main() {
 	}
 	defer conn.Close()
 
-	c := client.NewClient(ysp.NewBasicClient(conn))
-	response, err := c.Call(action, n1, n2)
-	if err != nil {
+	c := client.NewClient(ysp.NewBasicClient(conn), os.Stdout)
+	if err := c.Call(action, n1, n2); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
-	fmt.Println(response)
 }
 
 func parseArgs(args []string) (int, int, error) {
