@@ -54,7 +54,7 @@ apps, it may be cool? ¯\\\_(ツ)\_/¯
 1. Copy and paste the suggested command to set the server address env var.
 1. Call the client: `./bin/client`.
 
-### Configuration options
+**Configuration options:**
 
 - The server port can be edited in `kube/values.yaml`
 
@@ -62,20 +62,19 @@ apps, it may be cool? ¯\\\_(ツ)\_/¯
 ```sh
 $ make help
 Usage:
-  proto     ..................... regenerate grpc sources (will go to ./ysp/ysp.proto)
-  client    ..................... build the client bin (will go to ./bin/client)
-  server    ..................... build the server bin (will go to ./bin/server)
-  clean     ..................... delete bins
-  test      ..................... run all test suites
-  slow-test ..................... run all test suites in docker container
-  unit      ..................... run server and client unit tests
-  int       ..................... run integration tests in docker container
-  dep       ..................... update dependencies
-  mock      ..................... regenerate grpc testing mocks
-  docker    ..................... rebuild and push callisto13/ysp docker image
-  deploy    ..................... deploy server and service to minikube
-  destroy   ..................... delete server and service
-  reload    ..................... proto server client docker destroy deploy (aka rebuild and redeploy the lot)
+  proto   ..................... regenerate grpc sources (will go to ./ysp/ysp.proto)
+  client  ..................... build the client bin (will go to ./bin/client)
+  server  ..................... build the server bin (will go to ./bin/server)
+  clean   ..................... delete bins
+  test    ..................... run all test suites in docker container
+  unit    ..................... run server and client unit tests
+  int     ..................... run integration tests in docker container
+  dep     ..................... update dependencies
+  mock    ..................... regenerate grpc testing mocks
+  docker  ..................... rebuild and push callisto13/ysp docker image
+  deploy  ..................... deploy server and service to minikube
+  destroy ..................... delete server and service
+  reload  ..................... proto server client docker destroy deploy (aka rebuild and redeploy the lot)
 ```
 
 ### Repo structure
