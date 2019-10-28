@@ -12,10 +12,10 @@ import (
 )
 
 var (
-	cliBin     string
-	serverBin  string
-	serverPort string
-	serverCmd  *exec.Cmd
+	cliBin        string
+	serverBin     string
+	serverPort    string
+	serverSession *gexec.Session
 )
 
 func TestIntegration(t *testing.T) {
@@ -30,13 +30,15 @@ func TestIntegration(t *testing.T) {
 		Expect(err).NotTo(HaveOccurred())
 
 		serverPort = fmt.Sprintf("1430%d", config.GinkgoConfig.ParallelNode)
-		serverCmd = exec.Command(serverBin, "-port", serverPort)
-		Expect(serverCmd.Start()).To(Succeed())
+
+		serverCmd := exec.Command(serverBin, "-port", serverPort)
+		serverSession, err = gexec.Start(serverCmd, GinkgoWriter, GinkgoWriter)
+		Expect(err).NotTo(HaveOccurred())
 	})
 
 	AfterSuite(func() {
-		//TODO: why is .Wait() being weird?
-		Expect(serverCmd.Process.Kill()).To(Succeed())
+		serverSession.Terminate().Wait()
+		gexec.Terminate()
 		gexec.CleanupBuildArtifacts()
 	})
 

@@ -1,19 +1,19 @@
 package integration_test
 
 import (
-	"bytes"
 	"fmt"
 	"os/exec"
 
 	. "github.com/onsi/ginkgo"
 	"github.com/onsi/ginkgo/config"
 	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega/gbytes"
+	"github.com/onsi/gomega/gexec"
 )
 
 var _ = Describe("YSP Client", func() {
 	var (
 		cliCmd  *exec.Cmd
-		cliOut  *bytes.Buffer
 		cliArgs []string
 		cliEnv  []string
 	)
@@ -21,9 +21,6 @@ var _ = Describe("YSP Client", func() {
 	JustBeforeEach(func() {
 		cliCmd = exec.Command(cliBin, cliArgs...)
 		cliCmd.Env = cliEnv
-		cliOut = bytes.NewBuffer([]byte{})
-		cliCmd.Stdout = cliOut
-		cliCmd.Stderr = cliOut
 	})
 
 	BeforeEach(func() {
@@ -36,9 +33,9 @@ var _ = Describe("YSP Client", func() {
 		})
 
 		It("client complains and exits", func() {
-			err := cliCmd.Run()
-			Expect(err).To(HaveOccurred())
-			Expect(cliOut.String()).To(Equal("SERVICE_ADDR not set\n"))
+			session, err := gexec.Start(cliCmd, GinkgoWriter, GinkgoWriter)
+			Expect(err).NotTo(HaveOccurred())
+			Eventually(session.Out).Should(gbytes.Say("SERVICE_ADDR not set\n"))
 		})
 	})
 
@@ -48,9 +45,9 @@ var _ = Describe("YSP Client", func() {
 		})
 
 		It("client prints the help and exits", func() {
-			err := cliCmd.Run()
-			Expect(err).To(HaveOccurred())
-			Expect(cliOut.String()).To(Equal("usage: -action=<sum|prime> n1 n2\n"))
+			session, err := gexec.Start(cliCmd, GinkgoWriter, GinkgoWriter)
+			Expect(err).NotTo(HaveOccurred())
+			Eventually(session.Out).Should(gbytes.Say("usage: -action=<sum|prime> n1 n2\n"))
 		})
 	})
 
@@ -60,9 +57,9 @@ var _ = Describe("YSP Client", func() {
 		})
 
 		It("client complains and exits", func() {
-			err := cliCmd.Run()
-			Expect(err).To(HaveOccurred())
-			Expect(cliOut.String()).To(Equal("Please provide 2 integers\n"))
+			session, err := gexec.Start(cliCmd, GinkgoWriter, GinkgoWriter)
+			Expect(err).NotTo(HaveOccurred())
+			Eventually(session.Out).Should(gbytes.Say("Please provide 2 integers\n"))
 		})
 	})
 
@@ -72,9 +69,9 @@ var _ = Describe("YSP Client", func() {
 		})
 
 		It("prints the sum of two numbers", func() {
-			err := cliCmd.Run()
+			session, err := gexec.Start(cliCmd, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(cliOut.String()).To(Equal("9\n"))
+			Eventually(session.Out).Should(gbytes.Say("9\n"))
 		})
 	})
 
@@ -84,9 +81,9 @@ var _ = Describe("YSP Client", func() {
 		})
 
 		It("prints all primes between two numbers", func() {
-			err := cliCmd.Run()
+			session, err := gexec.Start(cliCmd, GinkgoWriter, GinkgoWriter)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(cliOut.String()).To(Equal("[3 5 7 11 13]\n"))
+			Eventually(session.Out).Should(gbytes.Say("[3 5 7 11 13]"))
 		})
 	})
 })

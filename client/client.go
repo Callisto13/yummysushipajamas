@@ -16,6 +16,7 @@ func NewClient(yspConn ysp.BasicClient) Client {
 	return Client{conn: yspConn}
 }
 
+// TODO: I decided I don't like this interface stuff, a switch maybe wouldn't be so bad
 func (c *Client) Call(name string, n1, n2 int) (interface{}, error) {
 	var actions = map[string]func(int32, int32) (interface{}, error){
 		"sum":   c.Sum,
