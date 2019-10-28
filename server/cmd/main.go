@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"os/signal"
+	"syscall"
 
 	ysp "github.com/Callisto13/yummysushipajamas/pb"
 	"github.com/Callisto13/yummysushipajamas/server"
@@ -36,10 +38,30 @@ func main() {
 	grpcServer := grpc.NewServer()
 	ysp.RegisterBasicServer(grpcServer, &s)
 
-	logger.Info("starting YSP Service on port " + port)
-	if err := grpcServer.Serve(l); err != nil {
-		logger.Error(fmt.Sprintf("Failed to listen on localhost:%s", port), err)
+	errChan := make(chan error)
+	stopChan := make(chan os.Signal)
+	signal.Notify(stopChan, syscall.SIGTERM, syscall.SIGINT)
+
+	logger.Info("starting YSP Service")
+	go func() {
+		if err := grpcServer.Serve(l); err != nil {
+			logger.Error("Failed to start gRPC server", err)
+			errChan <- err
+		}
+	}()
+
+	defer func() {
+		grpcServer.GracefulStop()
+	}()
+
+	logger.Info("YSP Service running on port " + port)
+
+	select {
+	case err := <-errChan:
+		logger.Error("Server received fatal error", err)
 		os.Exit(1)
+	case <-stopChan:
+		logger.Info("YSP Service stopped, finishing last request")
 	}
 }
 
