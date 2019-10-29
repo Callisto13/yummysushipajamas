@@ -1,6 +1,8 @@
 package server
 
 import (
+	"math"
+
 	ysp "github.com/Callisto13/yummysushipajamas/pb"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
@@ -36,7 +38,7 @@ func (s *Server) Prime(in *ysp.Req, stream ysp.Basic_PrimeServer) error {
 }
 
 func isPrime(n int) bool {
-	for i := 2; i < n; i++ {
+	for i := 2; i <= int(math.Floor(math.Sqrt(float64(n)))); i++ {
 		if n%i == 0 {
 			return false
 		}

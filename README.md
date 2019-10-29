@@ -22,8 +22,15 @@ Very little and nothing useful :)
 $ ./bin/client -action=sum 3 5
 8
 # list all primes between 2 numbers (hopefully, implementation is very naive atm)
-$ ./bin/client -action=prime 0 10
-[2 3 5 7]
+$ ./bin/client -action=prime 0 20
+2
+3
+5
+7
+11
+13
+17
+19
 ```
 
 ### What _could_ it do?

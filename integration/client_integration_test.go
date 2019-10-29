@@ -63,6 +63,8 @@ var _ = Describe("YSP Client", func() {
 		})
 	})
 
+	// TODO: fix flakiness of following tests. suspect it is due to not adding grpc.WaitForReady(true)
+	// to client calls, but simply throwing that in did zilch. still looking into it.
 	Context("calling sum", func() {
 		BeforeEach(func() {
 			cliArgs = []string{"-action=sum", "4", "5"}

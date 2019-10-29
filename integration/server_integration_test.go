@@ -3,6 +3,7 @@ package integration_test
 import (
 	"fmt"
 	"os/exec"
+	"runtime"
 	"time"
 
 	. "github.com/onsi/ginkgo"
@@ -64,6 +65,10 @@ var _ = Describe("Server CLI", func() {
 
 	Context("when the `port` flag is provided", func() {
 		It("the server is started on the given port", func() {
+			if runtime.GOOS != "linux" {
+				Skip("linux test only")
+			}
+
 			out := lsofCmd(serverPort)
 			Expect(out).To(ContainSubstring(fmt.Sprintf("%d", serverSession.Command.Process.Pid)))
 		})
