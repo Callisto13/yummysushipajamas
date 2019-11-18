@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/Callisto13/yummysushipajamas.svg?branch=master)](https://travis-ci.org/Callisto13/yummysushipajamas)
-
 ### What is it?
 
 A very basic gRPC server and CLI based client.
@@ -7,21 +5,17 @@ A very basic gRPC server and CLI based client.
 It is designed primarily to run in containers/be cloud native. Kube manifests
 are included.
 
-Obviously everything has been TDD-ed, see below for running tests. (Ensure [ginkgo](https://onsi.github.io/ginkgo/) is installed first,
-or just run everything is Docker, which is fine but slower.) 
-
-Deps are managed with `go mod`, and everything has been built and tested
-with Go version 1.13.3.
+Go version 1.13.3.
 
 ### What does it do?
 
-Very little and nothing useful :)
+Very little and nothing useful :) I am just playing with stuff.
 
 ```sh
 # sum 2 numbers
 $ ./bin/client -action=sum 3 5
 8
-# list all primes between 2 numbers (hopefully, implementation is very naive atm)
+# list all primes between 2 numbers
 $ ./bin/client -action=prime 0 20
 2
 3
@@ -82,45 +76,4 @@ Usage:
   deploy  ..................... deploy server and service to minikube
   destroy ..................... delete server and service
   reload  ..................... proto server client docker destroy deploy (aka rebuild and redeploy the lot)
-```
-
-### Repo structure
-```
-.
-├── Dockerfile
-├── Makefile
-├── README.md
-├── bin
-│   ├── client
-│   └── server
-├── ci
-│   └── Dockerfile
-├── client
-│   ├── client.go
-│   ├── client_suite_test.go
-│   ├── client_test.go
-│   └── cmd
-│       └── main.go
-├── go.mod
-├── go.sum
-├── integration
-│   ├── integration_suite_test.go
-│   └── integration_test.go
-├── kube
-│   ├── deployment.yaml
-│   ├── service.yaml
-│   └── values.yaml
-├── pb
-│   ├── mocks
-│   │   └── ysp_mock.go
-│   ├── ysp.pb.go
-│   └── ysp.proto
-├── server
-│   ├── cmd
-│   │   └── main.go
-│   ├── server.go
-│   ├── server_suite_test.go
-│   └── server_test.go
-└── vendor
-    └── ...
 ```
