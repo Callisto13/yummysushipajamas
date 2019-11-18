@@ -16,13 +16,13 @@ func NewYSPServer(l *logrus.Logger) Server {
 	return Server{logger: l}
 }
 
-func (s *Server) Sum(ctx context.Context, in *ysp.Req) (*ysp.Resp, error) {
+func (s Server) Sum(ctx context.Context, in *ysp.Req) (*ysp.Resp, error) {
 	s.logger.WithFields(logrus.Fields{"N1": in.N1, "N2": in.N2}).Info("sum")
 
 	return &ysp.Resp{Result: in.N1 + in.N2}, nil
 }
 
-func (s *Server) Prime(in *ysp.Req, stream ysp.Basic_PrimeServer) error {
+func (s Server) Prime(in *ysp.Req, stream ysp.Basic_PrimeServer) error {
 	s.logger.WithFields(logrus.Fields{"N1": in.N1, "N2": in.N2}).Info("prime")
 
 	for i := in.N1; i <= in.N2; i++ {
